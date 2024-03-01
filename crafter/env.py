@@ -53,7 +53,7 @@ class Env(BaseClass):
     self._unlocked = None
     # Some libraries expect these attributes to be set.
     self.reward_range = None
-    self.metadata = None
+    self.metadata = {'render_modes':['rgb_array']}
 
   @property
   def observation_space(self):
@@ -118,7 +118,11 @@ class Env(BaseClass):
     return obs, reward, done, info
 
   def render(self, size=None):
-    size = size or self._size
+    if isinstance(size, str):
+      size = (512, 512)
+    else:
+      size = self._size
+    
     unit = size // self._view
     canvas = np.zeros(tuple(size) + (3,), np.uint8)
     local_view = self._local_view(self._player, unit)
